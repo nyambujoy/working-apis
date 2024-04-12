@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="search">
+        <label for="searchImage" id="labelsearch">Search for image</label>
+        <input type="text" id="searchImage" placeholder="Search for GIFs">
+    </div>
+    <img src="#">
+    <button class="new">New image</button>
+    <script>
+        const newImage = document.querySelector('.new');
+        const img = document.querySelector('img');
+        const searchBox = document.querySelector('#searchImage');
+        const labelsearch = document.getElementById('labelsearch');
+
+
+
+        async function generateImage() {
+            const searchTerm = searchBox.value.trim()
+
+            if (searchTerm === '') {
+                labelsearch.textContent = 'please insert a value.'
+            }
+
+            try {
+                const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=fc6viG2qaB7AlSuZdvjZal7wH6NzoS0x&s=${searchTerm}`, { mode: 'cors' })
+                const searchedData = await response.json()
+
+                if (searchedData.data && searchedData.data.images && searchedData.data.images.original && searchedData.data.images.original.url) {
+                    img.src = searchedData.data.images.original.url;
+                    labelsearch.textContent = 'search for image'
+                } else {
+                    labelsearch.textContent = 'error image not found'
+                }
+
+            }
+            catch {
+                console.error('Error:', error);
+                img.src = 'default-image-url.jpg'; // Provide a default image
+                // Or display an error message to the user
+                // You can modify this to display the error message in the UI
+                labelsearch.textContent = 'Failed to fetch GIF. Please try again later'
+            }
+
+
+
+        }
+
+
+        newImage.addEventListener('click', generateImage)
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
